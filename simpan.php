@@ -7,6 +7,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $kategori = htmlspecialchars($_POST['kategori']);
     $jumlah = intval($_POST['jumlah']);
     $kondisi = htmlspecialchars($_POST['kondisi']);
+    // Panggil koneksi database
+include 'koneksi.php';
+
+// Menghitung total harga
+$total_harga = $harga_satuan * $jumlah;
+
+// Query untuk menyimpan data ke tabel barang (pastikan nama tabel & kolom sesuai)
+$sql = "INSERT INTO barang (kode_barang, nama_barang, kategori, jumlah, kondisi, harga_satuan, total_harga) 
+        VALUES ('$kode', '$nama', '$kategori', '$jumlah', '$kondisi', '$harga_satuan', '$total_harga')";
+
+if ($koneksi->query($sql) === TRUE) {
+    echo "<script>alert('Data barang berhasil disimpan!'); window.location='index.html';</script>";
+} else {
+    echo "Error: " . $sql . "<br>" . $koneksi->error;
+}
+
+// Tutup koneksi
+$koneksi->close();
 
     // Simulasi harga satuan berdasarkan kategori untuk perhitungan nilai aset
     $harga_satuan = 0;
